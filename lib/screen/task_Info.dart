@@ -48,6 +48,7 @@ class _Task_InfoState extends State<Task_Info> {
                   border: OutlineInputBorder()
                 ),
               ),
+
               SizedBox(height: 15,),
               TextField(maxLines: 5,
                 controller: txtnotes,
@@ -56,7 +57,9 @@ class _Task_InfoState extends State<Task_Info> {
                   border: OutlineInputBorder()
                 ),
               ),
+
               Spacer(),
+
               ElevatedButton(onPressed: () {
 
                 if(mp['status'] == 'add')
