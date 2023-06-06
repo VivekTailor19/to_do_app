@@ -29,7 +29,7 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
                         control.tasks.removeAt(index);
                       },
                       onLongPress: () {
-                        Get.toNamed("taskinfo",arguments: {
+                        Get.toNamed("/taskinfo",arguments: {
                           "status":"edit",
                           "index":index,
                           "data":control.tasks[index]
@@ -47,7 +47,7 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
 
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Get.toNamed("taskinfo",arguments: {"status":"add"});
+            Get.toNamed("/taskinfo",arguments: {"status":"add"});
           },
           child: Icon(Icons.add_task),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 import 'package:to_do_list/model/task_model.dart';
 
 import '../controller/task_controller.dart';
@@ -18,12 +19,11 @@ class _Task_InfoState extends State<Task_Info> {
   void initState() {
     mp = Get.arguments;
 
-    if(mp['status'] == "edit")
-      {
-        TaskModel tm = mp['data'];
-        txttitle = TextEditingController(text: tm.title);
-        txtnotes = TextEditingController(text: tm.notes);
-      }
+    if (mp['status'] == "edit") {
+      TaskModel tm = mp['data'];
+      txttitle = TextEditingController(text: tm.title);
+      txtnotes = TextEditingController(text: tm.notes);
+    }
 
     super.initState();
   }
@@ -33,53 +33,143 @@ class _Task_InfoState extends State<Task_Info> {
   TextEditingController txtnotes = TextEditingController();
   TaskController control = Get.put(TaskController());
 
+  DateTime? pdate;
+  TimeOfDay? ptime;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding:  EdgeInsets.all(10),
-          child: Column(
-            children: [
-              TextField(
-                controller: txttitle,
-                decoration: InputDecoration(
-                  label: Text("Title"),
-                  border: OutlineInputBorder()
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.orangeAccent,
+          child: Icon(Icons.done, size: 20.sp, color: Colors.white,),
+          onPressed: () {
+            if (mp['status'] == 'add') {
+              TaskModel task = TaskModel(
+                  title: txttitle.text, notes: txtnotes.text);
+              control.tasks.add(task);
+            }
+            else {
+              TaskModel task = TaskModel(
+                  title: txttitle.text, notes: txtnotes.text);
+              control.tasks[mp['index']] = task;
+            }
+
+            Get.back();
+          },
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                TextField(maxLines: 3,
+                  controller: txttitle,
+                  decoration: InputDecoration(
+                      label: Text("Enter the title"),
+                      border: OutlineInputBorder(borderSide: BorderSide.none)
+                  ),
                 ),
-              ),
-
-              SizedBox(height: 15,),
-              TextField(maxLines: 5,
-                controller: txtnotes,
-                decoration: InputDecoration(
-                    label: Text("Notes"),
-                  border: OutlineInputBorder()
+                TextField(maxLines: 6,
+                  controller: txtnotes,
+                  decoration: InputDecoration(
+                      hintText: "Enter new task",
+                      border: OutlineInputBorder(borderSide: BorderSide.none)
+                  ),
                 ),
-              ),
 
-              Spacer(),
+                SizedBox(height: 15,),
 
-              ElevatedButton(onPressed: () {
+                Button(title: "Priority", icon: Icons.grid_view_outlined),
 
-                if(mp['status'] == 'add')
-                  {
-                    TaskModel task = TaskModel(title: txttitle.text,notes: txtnotes.text);
-                    control.tasks.add(task);
-                  }
-                else
-                  {
-                    TaskModel task = TaskModel(title: txttitle.text,notes: txtnotes.text);
-                    control.tasks[mp['index']] = task;
-                  }
+                 GestureDetector(onTap: () async{
 
-                Get.back();
-              }, child: Text(mp['status'] == 'add'?"Add":"Update"))
-            ],
+                    pdate = await showDatePicker(context: Get.context!,
+
+                        initialDate: control.d.value,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2050));
+                  },
+                      child:  Button(title: control.d.value == null?  "Choose a day" : " ${control.d.value.day} / ${control.d.value.month} / ${control.d.value.year}",
+                            icon: Icons.calendar_month_rounded),
+                      ),
+
+
+                GestureDetector(onTap: () async {
+
+                    ptime = await showTimePicker(context: Get.context!, initialTime: control.t.value);
+
+                    if(ptime!=null && ptime!=control.t.value)
+                      {
+                        control.t.value = ptime!;
+                      }
+
+                   // control.t = ptime as Rx<TimeOfDay>;
+                  },
+                    child:  Obx(() =>  Button(title: ptime != null ? "Choose time" : '${control.t.value.hour}', icon: Icons.alarm_add_rounded))),
+
+
+
+
+
+                // DropdownButton(
+                //    hint: Text("Priority"),
+                //
+                //    icon: Icon(Icons.grid_view_outlined, size: 15.sp,
+                //      color: Colors.orangeAccent,),
+                //    underline: Container(),
+                //
+                //    dropdownColor: Colors.white,
+                //
+                //    alignment: Alignment.center,
+                //    value: control.selPriority.obs,
+                //
+                //    items: [
+                //      DropdownMenuItem(child: Text("High"),value: "High"),
+                //      DropdownMenuItem(child: Text("Medium"), value: "Medium"),
+                //      DropdownMenuItem(child: Text("Low"), value: "Low"),
+                //
+                //    ],
+                //
+                //
+                //
+                //    onChanged: (value) {
+                //      control.selPriority = value as RxString;
+                //    },
+                //  ),
+
+              ],
+            ),
+
+
           ),
         ),
+      ),
 
+
+    );
+  }
+
+  Widget Button({String? title, IconData? icon}) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 2.5.w),
+      height: 50,
+      width: 70.w,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black12, offset: Offset(0, 1))]
+      ),
+      child: Row(mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.orangeAccent, size: 20.sp,),
+          SizedBox(width: 2.w,),
+          Text("$title",
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w300)),
+        ],
       ),
     );
   }
+
 }
