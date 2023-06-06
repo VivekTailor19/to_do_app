@@ -33,8 +33,7 @@ class _Task_InfoState extends State<Task_Info> {
   TextEditingController txtnotes = TextEditingController();
   TaskController control = Get.put(TaskController());
 
-  DateTime? pdate;
-  TimeOfDay? ptime;
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,29 +83,33 @@ class _Task_InfoState extends State<Task_Info> {
 
                  GestureDetector(onTap: () async{
 
-                    pdate = await showDatePicker(context: Get.context!,
+                    control.pdate = (await showDatePicker(context: Get.context!,
 
                         initialDate: control.d.value,
                         firstDate: DateTime(2020),
-                        lastDate: DateTime(2050));
+                        lastDate: DateTime(2050))) as Rx<DateTime>?;
                   },
-                      child:  Button(title: control.d.value == null?  "Choose a day" : " ${control.d.value.day} / ${control.d.value.month} / ${control.d.value.year}",
+                      child:  Button(title:
+                      //control.d.value != null ?  "Choose a day" :
+                      " ${control.d.value.day} / ${control.d.value.month} / ${control.d.value.year}",
                             icon: Icons.calendar_month_rounded),
                       ),
 
 
                 GestureDetector(onTap: () async {
 
-                    ptime = await showTimePicker(context: Get.context!, initialTime: control.t.value);
+                  control.ptime = (await showTimePicker(context: Get.context!, initialTime: control.t.value)) as Rx<TimeOfDay>?;
 
-                    if(ptime!=null && ptime!=control.t.value)
+                    if(control.ptime!=null && control.ptime!=control.t.value)
                       {
-                        control.t.value = ptime!;
+                        control.t.value = control.ptime! as TimeOfDay;
                       }
 
                    // control.t = ptime as Rx<TimeOfDay>;
                   },
-                    child:  Obx(() =>  Button(title: ptime != null ? "Choose time" : '${control.t.value.hour}', icon: Icons.alarm_add_rounded))),
+                    child:  Obx(() =>  Button(title:
+                    //control.ptime != null ? "Choose time" :
+                    '${control.t.value.hour} ', icon: Icons.alarm_add_rounded))),
 
 
 
