@@ -15,7 +15,7 @@ class TaskController extends GetxController
   Rx<DateTime> d = DateTime.now().obs;
   Rx<TimeOfDay> t = TimeOfDay.now().obs;
 
-  Rx<DateTime>? pdate;
-  Rx<TimeOfDay>? ptime;
+  Rx<DateTime> pdate = DateTime(2015,3,1).obs;
+  Rx<TimeOfDay> ptime = TimeOfDay(hour: 12, minute: 40).obs;
 
 }

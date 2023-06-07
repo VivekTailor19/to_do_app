@@ -17,12 +17,12 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Obx(() => Column(mainAxisAlignment: MainAxisAlignment.center,
+        appBar: AppBar(title: Text("To Do",style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500,color: Colors.orange.shade400),),centerTitle:true,backgroundColor: Colors.white,),
+        body: Obx(() => Column(
           children: [
-            GridView.builder(
+            ListView.builder(
               shrinkWrap: true,
                   itemCount: control.tasks.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,mainAxisExtent: 200),
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onDoubleTap:() {
@@ -35,10 +35,11 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
                           "data":control.tasks[index]
                         });
                       },
-                      child: ListTile(
-                        title: Text("${control.tasks[index].title}"),
-                        subtitle: Text("${control.tasks[index].notes}",maxLines: 5,),
-                      ),
+                      child:TaskView(
+                        title: control.tasks[index].title,
+                        data: control.tasks[index].notes
+                      )
+
                     );
                   },),
           ],
@@ -52,6 +53,24 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
           child: Icon(Icons.add_task),
         ),
       ),
+    );
+  }
+
+  Widget TaskView({String?title, String? data})
+  {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Container(height: 200,width: double.infinity,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
+        color: Colors.orange.shade50,
+      ),
+
+      child: Column(
+        children: [
+          Text("$title",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
+          Text("$data",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w200),maxLines:3,overflow: TextOverflow.ellipsis,),
+        ],
+      ),),
     );
   }
 }
