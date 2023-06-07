@@ -131,6 +131,9 @@ class _Task_InfoState extends State<Task_Info> {
                    value: control.selPriority,
 
                    items: [
+
+                     control.priorities.asMap().entries.map((e) => DropdownMenuItem(child: Text("${control.priorities[e.key].title}"))).toList();
+
                      DropdownMenuItem(child: Text("High"),value: "High"),
                      DropdownMenuItem(child: Text("Medium"), value: "Medium"),
                      DropdownMenuItem(child: Text("Low"), value: "Low"),
