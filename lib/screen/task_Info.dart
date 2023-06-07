@@ -19,12 +19,13 @@ class _Task_InfoState extends State<Task_Info> {
   void initState() {
     mp = Get.arguments;
 
+    control.date.value = control.setDateFormat(DateTime.now());
+
     if (mp['status'] == "edit") {
       TaskModel tm = mp['data'];
       txttitle = TextEditingController(text: tm.title);
       txtnotes = TextEditingController(text: tm.notes);
     }
-
     super.initState();
   }
 
@@ -32,8 +33,6 @@ class _Task_InfoState extends State<Task_Info> {
   TextEditingController txttitle = TextEditingController();
   TextEditingController txtnotes = TextEditingController();
   TaskController control = Get.put(TaskController());
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -79,73 +78,75 @@ class _Task_InfoState extends State<Task_Info> {
 
                 SizedBox(height: 15,),
 
-                Button(title: "Priority", icon: Icons.grid_view_outlined),
+                Row(mainAxisAlignment: MainAxisAlignment.center,mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.grid_view_outlined, color: Colors.orangeAccent, size: 22.sp,),
+                    SizedBox(width: 2.w,),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 2.5.w),
+                      height: 50,
+                      width: 70.w,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
+                          boxShadow: [BoxShadow(color: Colors.black12, offset: Offset(0, 1))]
+                      ),
+                      child: Obx(() =>  DropdownButton(
 
-                 GestureDetector(onTap: () async{
+                        hint: Text("Priority",style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w300)),
 
-                    control.pdate = ((await showDatePicker(context: Get.context!,
+                        underline: Container(),
+                        iconSize: 0,
 
-                        initialDate: control.d.value,
-                        firstDate: DateTime(2001),
-                        lastDate: DateTime(2050))) as Rx<DateTime>?)!;
+                        dropdownColor: Colors.white,
 
-                    if(control.pdate != null  && control.pdate !=control.d)
-                      {
-                        control.d.value = control.d.value;
-                      }
+                        alignment: Alignment.center,
+                        value: control.selPriority.value,
 
-                  },
-                      child:  Button(title:
+                        items:
+                        control.pro.map((e) => DropdownMenuItem(child: Text("$e",style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w300)),value: e,)).toList(),
 
-                      " ${control.d.value.day} / ${control.d.value.month} / ${control.d.value.year}",
-                            icon: Icons.calendar_month_rounded),
+                        onChanged: (value) {
+                          control.selPriority.value= value as String;
+                        },
+                      ),
+                      ),
+                    ),
+                  ],
+                ),
+
+
+
+                 GestureDetector(onTap: () async {
+                      DateTime? pick = await showDatePicker(
+                          context: Get.context!, initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),lastDate: DateTime(2025));
+                      control.date.value = control.setDateFormat(pick!);
+                    },
+                      child: Obx(() => Button(title:
+                        " ${control.date}",
+                              icon: Icons.calendar_month_rounded),
+                      ),
                       ),
 
 
                 GestureDetector(onTap: () async {
 
-                  control.ptime = (await showTimePicker(context: Get.context!, initialTime: control.t.value)) as Rx<TimeOfDay>;
+                  TimeOfDay? pick = await showTimePicker(context: Get.context!, initialTime: TimeOfDay.now());
 
+                  control.changetime(pick!);
 
-                  control.t.value = control.ptime.value;
-                  print(control.t.obs);
-
-                  },
-                    child:  Obx(() =>  Button(title:
-                    '${control.t.value.hour} : ${control.t.value.minute} ', icon: Icons.alarm_add_rounded))),
-
-
+                },
+                    child:
+                     Button(title:
+                    '${control.time.hour} : ${control.time.minute}', icon: Icons.alarm_add_rounded)),
 
 
 
-                DropdownButton(
-                   hint: Text("Priority"),
-
-                   icon: Icon(Icons.grid_view_outlined, size: 15.sp,
-                     color: Colors.orangeAccent,),
-                   underline: Container(),
-
-                   dropdownColor: Colors.white,
-
-                   alignment: Alignment.center,
-                   value: control.selPriority,
-
-                   items: [
-
-                     control.priorities.asMap().entries.map((e) => DropdownMenuItem(child: Text("${control.priorities[e.key].title}"))).toList();
-
-                     DropdownMenuItem(child: Text("High"),value: "High"),
-                     DropdownMenuItem(child: Text("Medium"), value: "Medium"),
-                     DropdownMenuItem(child: Text("Low"), value: "Low"),
-
-                   ],
 
 
 
-                   onChanged: (value) {
-                     control.selPriority = value as RxString;
-                   },
-                 ),
 
               ],
             ),
