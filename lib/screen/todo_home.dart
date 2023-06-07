@@ -20,33 +20,35 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
         appBar: AppBar(title: Text("To Do",style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500,color: Colors.orange.shade400),),centerTitle:true,backgroundColor: Colors.white,),
         body: Obx(() => Column(
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-                  itemCount: control.tasks.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onDoubleTap:() {
-                        control.tasks.removeAt(index);
-                      },
-                      onLongPress: () {
-                        Get.toNamed("/taskinfo",arguments: {
-                          "status":"edit",
-                          "index":index,
-                          "data":control.tasks[index]
-                        });
-                      },
-                      child:TaskView(
-                        title: control.tasks[index].title,
-                        data: control.tasks[index].notes
-                      )
+            Expanded(
+              child: ListView.builder(
 
-                    );
-                  },),
+                    itemCount: control.tasks.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onDoubleTap:() {
+                          control.tasks.removeAt(index);
+                        },
+                        onLongPress: () {
+                          Get.toNamed("/taskinfo",arguments: {
+                            "status":"edit",
+                            "index":index,
+                            "data":control.tasks[index]
+                          });
+                        },
+                        child:TaskView(
+                          title: control.tasks[index].title,
+                          data: control.tasks[index].notes
+                        )
+
+                      );
+                    },),
+            ),
           ],
         ),
         ),
 
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton(backgroundColor: Colors.orangeAccent,
           onPressed: () {
             Get.toNamed("/taskinfo",arguments: {"status":"add"});
           },

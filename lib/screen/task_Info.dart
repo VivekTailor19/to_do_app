@@ -83,14 +83,20 @@ class _Task_InfoState extends State<Task_Info> {
 
                  GestureDetector(onTap: () async{
 
-                    control.pdate = (await showDatePicker(context: Get.context!,
+                    control.pdate = ((await showDatePicker(context: Get.context!,
 
                         initialDate: control.d.value,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2050))) as Rx<DateTime>?;
+                        firstDate: DateTime(2001),
+                        lastDate: DateTime(2050))) as Rx<DateTime>?)!;
+
+                    if(control.pdate != null  && control.pdate !=control.d)
+                      {
+                        control.d.value = control.d.value;
+                      }
+
                   },
                       child:  Button(title:
-                      //control.d.value != null ?  "Choose a day" :
+
                       " ${control.d.value.day} / ${control.d.value.month} / ${control.d.value.year}",
                             icon: Icons.calendar_month_rounded),
                       ),
@@ -98,48 +104,45 @@ class _Task_InfoState extends State<Task_Info> {
 
                 GestureDetector(onTap: () async {
 
-                  control.ptime = (await showTimePicker(context: Get.context!, initialTime: control.t.value)) as Rx<TimeOfDay>?;
+                  control.ptime = (await showTimePicker(context: Get.context!, initialTime: control.t.value)) as Rx<TimeOfDay>;
 
-                    if(control.ptime!=null && control.ptime!=control.t.value)
-                      {
-                        control.t.value = control.ptime! as TimeOfDay;
-                      }
 
-                   // control.t = ptime as Rx<TimeOfDay>;
+                  control.t.value = control.ptime.value;
+                  print(control.t.obs);
+
                   },
                     child:  Obx(() =>  Button(title:
-                    //control.ptime != null ? "Choose time" :
-                    '${control.t.value.hour} ', icon: Icons.alarm_add_rounded))),
+                    '${control.t.value.hour} : ${control.t.value.minute} ', icon: Icons.alarm_add_rounded))),
 
 
 
 
 
-                // DropdownButton(
-                //    hint: Text("Priority"),
-                //
-                //    icon: Icon(Icons.grid_view_outlined, size: 15.sp,
-                //      color: Colors.orangeAccent,),
-                //    underline: Container(),
-                //
-                //    dropdownColor: Colors.white,
-                //
-                //    alignment: Alignment.center,
-                //    value: control.selPriority.obs,
-                //
-                //    items: [
-                //      DropdownMenuItem(child: Text("High"),value: "High"),
-                //      DropdownMenuItem(child: Text("Medium"), value: "Medium"),
-                //      DropdownMenuItem(child: Text("Low"), value: "Low"),
-                //
-                //    ],
-                //
-                //
-                //
-                //    onChanged: (value) {
-                //      control.selPriority = value as RxString;
-                //    },
-                //  ),
+                DropdownButton(
+                   hint: Text("Priority"),
+
+                   icon: Icon(Icons.grid_view_outlined, size: 15.sp,
+                     color: Colors.orangeAccent,),
+                   underline: Container(),
+
+                   dropdownColor: Colors.white,
+
+                   alignment: Alignment.center,
+                   value: control.selPriority,
+
+                   items: [
+                     DropdownMenuItem(child: Text("High"),value: "High"),
+                     DropdownMenuItem(child: Text("Medium"), value: "Medium"),
+                     DropdownMenuItem(child: Text("Low"), value: "Low"),
+
+                   ],
+
+
+
+                   onChanged: (value) {
+                     control.selPriority = value as RxString;
+                   },
+                 ),
 
               ],
             ),
@@ -154,24 +157,24 @@ class _Task_InfoState extends State<Task_Info> {
   }
 
   Widget Button({String? title, IconData? icon}) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 2.5.w),
-      height: 50,
-      width: 70.w,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.black12, offset: Offset(0, 1))]
-      ),
-      child: Row(mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.orangeAccent, size: 20.sp,),
-          SizedBox(width: 2.w,),
-          Text("$title",
+    return Row(mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: Colors.orangeAccent, size: 22.sp,),
+        SizedBox(width: 2.w,),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 2.5.w),
+          height: 50,
+          width: 70.w,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, offset: Offset(0, 1))]
+          ),
+          child: Text("$title",
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w300)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
