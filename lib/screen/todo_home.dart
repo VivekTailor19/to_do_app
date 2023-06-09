@@ -22,7 +22,6 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
           children: [
             Expanded(
               child: ListView.builder(
-
                     itemCount: control.tasks.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -38,11 +37,15 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
                         },
                         child:TaskView(
                           title: control.tasks[index].title,
-                          data: control.tasks[index].notes
+                          data: control.tasks[index].notes,
+                          date: control.tasks[index].dateTime,
+                          priority: control.tasks[index].priority,
+                          time: control.tasks[index].timeOfDay
                         )
 
                       );
-                    },),
+                    },
+              ),
             ),
           ],
         ),
@@ -58,7 +61,7 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
     );
   }
 
-  Widget TaskView({String?title, String? data})
+  Widget TaskView({String?title, String? data,String? date,String?time, String?priority})
   {
     return Padding(
       padding: EdgeInsets.all(8),
@@ -70,6 +73,9 @@ class _ToDo_HomeScreenState extends State<ToDo_HomeScreen> {
       child: Column(
         children: [
           Text("$title",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
+          Text("$date",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w700),),
+          Text("$priority",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w700),),
+          Text("$time",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w700),),
           Text("$data",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w200),maxLines:3,overflow: TextOverflow.ellipsis,),
         ],
       ),),

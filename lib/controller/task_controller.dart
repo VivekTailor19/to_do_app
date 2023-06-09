@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_list/model/task_model.dart';
 
@@ -9,8 +8,8 @@ import '../model/priority_model.dart';
 class TaskController extends GetxController
 {
   RxList<TaskModel>  tasks = <TaskModel>[
-    TaskModel(title: "Hello India",notes: "Let's Learn\n\n\nFigma"),
-    TaskModel(title: "Hello India",notes: "Let's Learn\ndfsdf\nsdfsdf\nFigma"),
+    TaskModel(title: "Hello India",notes: "Let's Learn\n\n\nFigma",priority: "Low",dateTime: "15/01/2023",timeOfDay: "01 : 01"),
+    TaskModel(title: "Hello India",notes: "Let's Learn\ndfsdf\nsdfsdf\nFigma",priority: "Medium",dateTime: "01/12/2023",timeOfDay: "10 : 10"),
   ].obs;
 
 
@@ -34,11 +33,12 @@ class TaskController extends GetxController
     return f.format(dt);
   }
 
-  TimeOfDay time = TimeOfDay.now();
-  void changetime(TimeOfDay t)
+  TimeOfDay temp = TimeOfDay.now();
+  RxString time = "${TimeOfDay.now()}".obs;
+  //  ${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}
+  String setTime(TimeOfDay t)
   {
-    time = t;
-    update();
+    return "${t.hour.toString().padLeft(2,'0')} : ${t.minute.toString().padLeft(2,'0')}";
   }
 
 

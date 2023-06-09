@@ -20,6 +20,7 @@ class _Task_InfoState extends State<Task_Info> {
     mp = Get.arguments;
 
     control.date.value = control.setDateFormat(DateTime.now());
+    control.time.value = control.setTime(TimeOfDay.now());
 
     if (mp['status'] == "edit") {
       TaskModel tm = mp['data'];
@@ -32,24 +33,36 @@ class _Task_InfoState extends State<Task_Info> {
 
   TextEditingController txttitle = TextEditingController();
   TextEditingController txtnotes = TextEditingController();
+
   TaskController control = Get.put(TaskController());
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.orangeAccent,
           child: Icon(Icons.done, size: 20.sp, color: Colors.white,),
           onPressed: () {
             if (mp['status'] == 'add') {
               TaskModel task = TaskModel(
-                  title: txttitle.text, notes: txtnotes.text);
+                  title: txttitle.text,
+                  notes: txtnotes.text,
+                  dateTime: control.date.value,
+                  priority: control.selPriority.value,
+                  timeOfDay: control.time.value
+              );
               control.tasks.add(task);
             }
             else {
               TaskModel task = TaskModel(
-                  title: txttitle.text, notes: txtnotes.text);
+                  title: txttitle.text,
+                  notes: txtnotes.text,
+                  dateTime: control.date.value,
+                  priority: control.selPriority.value,
+                  timeOfDay: control.time.value
+              );
               control.tasks[mp['index']] = task;
             }
 
@@ -64,7 +77,7 @@ class _Task_InfoState extends State<Task_Info> {
                 TextField(maxLines: 3,
                   controller: txttitle,
                   decoration: InputDecoration(
-                      label: Text("Enter the title"),
+                      hintText: "Enter the title",
                       border: OutlineInputBorder(borderSide: BorderSide.none)
                   ),
                 ),
@@ -121,7 +134,8 @@ class _Task_InfoState extends State<Task_Info> {
                  GestureDetector(onTap: () async {
                       DateTime? pick = await showDatePicker(
                           context: Get.context!, initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),lastDate: DateTime(2025));
+                          firstDate: DateTime(2000),lastDate: DateTime(2025)
+                      );
                       control.date.value = control.setDateFormat(pick!);
                     },
                       child: Obx(() => Button(title:
@@ -133,14 +147,18 @@ class _Task_InfoState extends State<Task_Info> {
 
                 GestureDetector(onTap: () async {
 
-                  TimeOfDay? pick = await showTimePicker(context: Get.context!, initialTime: TimeOfDay.now());
+                  TimeOfDay? pick = await showTimePicker(
+                      context: Get.context!, initialTime: TimeOfDay.now()
+                  );
 
-                  control.changetime(pick!);
+                  control.time.value = control.setTime(pick!);
+
 
                 },
                     child:
-                     Button(title:
-                    '${control.time.hour} : ${control.time.minute}', icon: Icons.alarm_add_rounded)),
+                     Obx(() => Button(title:
+                    '${control.time}', icon: Icons.alarm_add_rounded),
+                     )),
 
 
 
